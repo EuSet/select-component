@@ -1,6 +1,18 @@
 const input = document.querySelector('.js-search-select__input')
 const main = document.querySelector('.js-search-select__main')
+const select = document.getElementById('js-select')
+const resetButton = document.querySelector('.js-search-select__reset')
 const backButton = document.querySelector('.js-search-select__close')
+const modal = document.querySelector('.search-select-modal')
+const placeholder = input.dataset.placeholder
+const inputValue = input.querySelector('span')
+const applyButton = document.querySelector('.js-search-select__apply')
+applyButton.onclick = function (e) {
+    onApplyClick(e)
+}
+resetButton.onclick = function() {
+    reset()
+}
 backButton.onclick = function () {
     document.querySelector('.search-select-modal').classList.remove('visible');
 
@@ -158,3 +170,35 @@ function updateLeafChildrenStatus(leaf) {
     }
 }
 
+function reset() {
+    main.querySelectorAll('.search-select-modal__checkbox').forEach(function(checkbox) {
+        checkbox.querySelector('input').checked = false;
+    });
+    onCheckboxChange();
+}
+function onApplyClick(e) {
+    e.preventDefault();
+    let selected = [];
+    main.querySelectorAll('.search-select-modal__checkbox').forEach(function(checkbox) {
+        if (checkbox.querySelector('input').checked) {
+            selected.push({
+                label: checkbox.querySelector('span').textContent,
+                value: checkbox.querySelector('input').value
+            });
+        }
+    });
+    inputValue.textContent = selected.length ? selected.map(function(item) {
+        return item.label;
+    }).join(', ') : placeholder;
+    input.classList.toggle('_selected', selected.length);
+    let selectedIds = selected.map(function(item) {
+        return item.value;
+    });
+    select.querySelectorAll('option').forEach(function(option) {
+        option.selected = selectedIds.indexOf(option.value) !== -1;
+    });
+    close();
+}
+function close() {
+    modal.classList.remove('visible')
+}

@@ -10,7 +10,7 @@ const applyButton = document.querySelector('.js-search-select__apply')
 applyButton.onclick = function (e) {
     onApplyClick(e)
 }
-resetButton.onclick = function() {
+resetButton.onclick = function () {
     reset()
 }
 backButton.onclick = function () {
@@ -23,16 +23,20 @@ input.onclick = function () {
 
 function open() {
     document.querySelector('.search-select-modal').classList.add('visible');
-    document.getElementById('js-select').querySelectorAll('option').forEach(function (option) {
-        recInitCheckboxes(option)
-    })
-    document.querySelectorAll('.search-select-modal__leaf:not(._no-children)').forEach(function (leaf) {
-        changeViewOption(leaf)
-    });
-    document.querySelectorAll('.search-select-modal__leaf').forEach(function (leaf) {
-        changeChildCheckbox(leaf)
-    });
+    let container = document.querySelector('.search-select-modal__leaf')
+    if (!container) {
+        document.getElementById('js-select').querySelectorAll('option').forEach(function (option) {
+            recInitCheckboxes(option)
+        })
+        document.querySelectorAll('.search-select-modal__leaf:not(._no-children)').forEach(function (leaf) {
+            changeViewOption(leaf)
+        });
+        document.querySelectorAll('.search-select-modal__leaf').forEach(function (leaf) {
+            changeChildCheckbox(leaf)
+        });
+    }
 }
+
 function changeChildCheckbox(leaf) {
     let checkboxContainer = leaf.querySelector('.search-select-modal__checkbox');
     checkboxContainer.querySelector('input').addEventListener('change', function (e) {
@@ -56,6 +60,7 @@ function changeChildCheckbox(leaf) {
         onCheckboxChange();
     });
 }
+
 function changeViewOption(leaf) {
     let checkboxContainer = leaf.querySelector('.search-select-modal__checkbox');
     let btn = checkboxContainer.querySelector('.search-select-modal__arrow')
@@ -70,6 +75,7 @@ function changeViewOption(leaf) {
         }
     }
 }
+
 function buildCheckbox(option) {
     let wrap = document.createElement('label');
     wrap.classList.add('search-select-modal__checkbox');
@@ -171,15 +177,16 @@ function updateLeafChildrenStatus(leaf) {
 }
 
 function reset() {
-    main.querySelectorAll('.search-select-modal__checkbox').forEach(function(checkbox) {
+    main.querySelectorAll('.search-select-modal__checkbox').forEach(function (checkbox) {
         checkbox.querySelector('input').checked = false;
     });
     onCheckboxChange();
 }
+
 function onApplyClick(e) {
     e.preventDefault();
     let selected = [];
-    main.querySelectorAll('.search-select-modal__checkbox').forEach(function(checkbox) {
+    main.querySelectorAll('.search-select-modal__checkbox').forEach(function (checkbox) {
         if (checkbox.querySelector('input').checked) {
             selected.push({
                 label: checkbox.querySelector('span').textContent,
@@ -187,18 +194,20 @@ function onApplyClick(e) {
             });
         }
     });
-    inputValue.textContent = selected.length ? selected.map(function(item) {
+    inputValue.textContent = selected.length ? selected.map(function (item) {
         return item.label;
     }).join(', ') : placeholder;
     input.classList.toggle('_selected', selected.length);
-    let selectedIds = selected.map(function(item) {
+    let selectedIds = selected.map(function (item) {
         return item.value;
     });
-    select.querySelectorAll('option').forEach(function(option) {
+    select.querySelectorAll('option').forEach(function (option) {
         option.selected = selectedIds.indexOf(option.value) !== -1;
     });
     close();
 }
+
 function close() {
     modal.classList.remove('visible')
 }
+

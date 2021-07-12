@@ -7,6 +7,12 @@ const modal = document.querySelector('.search-select-modal')
 const placeholder = input.dataset.placeholder
 const inputValue = input.querySelector('span')
 const applyButton = document.querySelector('.js-search-select__apply')
+const search = document.querySelector('.js-search-select__search')
+let onlySelected = false
+search.addEventListener('input', searchInput)
+function searchInput() {
+    updateList()
+}
 applyButton.onclick = function (e) {
     onApplyClick(e)
 }
@@ -209,5 +215,14 @@ function onApplyClick(e) {
 
 function close() {
     modal.classList.remove('visible')
+}
+
+function updateList() {
+    let searchValue = search.value.trim();
+    main.querySelectorAll('.search-select-modal__checkbox').forEach(function(checkbox) {
+        checkbox.classList.toggle('hidden', searchValue !== null && checkbox.querySelector('span')
+            .textContent.indexOf(searchValue) === -1
+            || onlySelected && checkbox.querySelector('input').checked === false);
+    });
 }
 
